@@ -2,6 +2,7 @@ package br.com.dio.desafio.dominio;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class Dev {
@@ -11,14 +12,23 @@ public class Dev {
 
 
     public void increverBootcamp(Bootcamp bootcamp){
+        this.conteudosInscritos.addAll(bootcamp.getConteudos());
+        bootcamp.getDevsInscritos().add(this);
 
     }
 
     public void progredir(){
-
+        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
+        if (conteudo.isPresent()){
+            this.conteudosConcluidos.add(conteudo.get());
+            this.conteudosInscritos.remove(conteudo.get());
+        }else {
+            System.out.println("Você não está matriculado em nenhum conteúdo");
+        }
     }
 
-    public void calcularTotalXp(){
+    public double calcularTotalXp(){
+    return this.conteudosConcluidos.stream().mapToDouble(Conteudo::calcularXp).sum();
 
     }
 
